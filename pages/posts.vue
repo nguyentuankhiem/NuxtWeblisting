@@ -3,7 +3,7 @@
         <body>
             <ul>
                 <li v-for="item in posts" :key="item.id">
-                    {{ item.pageInfor.slug }}
+                    {{ item.gallery[0] }}
                 </li>
             </ul>
         </body>
@@ -16,7 +16,16 @@
     export default {
         apollo: {
             posts: gql`query GetPost {
-                posts
+                posts(where: 
+                {
+                    pageInfor: 
+                    {
+                        slug: 
+                        {
+                            eq: "can-ho-the-sun-avenue-3pn2wc-tang-17-thoai-mai-sang-trong-40072"
+                        }
+                    }
+                })
                 {
                     id
                     pageInfor 
@@ -25,6 +34,7 @@
                         slug
                     }
                     status
+                    gallery
                 }
             
             }`
