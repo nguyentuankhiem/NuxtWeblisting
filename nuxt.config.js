@@ -28,7 +28,16 @@ export default {
   buildModules: [
     // https://go.nuxtjs.dev/tailwindcss
     '@nuxtjs/tailwindcss',
+    '@nuxtjs/apollo'
   ],
+
+  apollo: {
+    clientConfigs : {
+      default: {
+        httpEndpoint: "http://maicogroup.net:3001/graphql/"
+      }
+    }
+  },
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
