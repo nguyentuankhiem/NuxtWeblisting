@@ -1,13 +1,11 @@
 <template>
-    <html>
-        <body>
-            <ul>
-                <li v-for="item in posts" :key="item.id">
-                    {{ item.gallery[0] }}
-                </li>
-            </ul>
-        </body>
-    </html>
+    <body>
+        <ul>
+            <li v-for="item in posts" :key="item.id">
+                {{ item.gallery[0] }}
+            </li>
+        </ul>
+    </body>
 </template>
 
 

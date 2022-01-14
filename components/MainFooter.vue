@@ -1,5 +1,4 @@
 <template>
-    <html>
         <footer class="container mx-auto bg-white py-8 border-t border-gray-400">
         <div class="container flex px-3 py-8 ">
             <div class="w-full mx-auto flex flex-wrap">
@@ -24,5 +23,4 @@
             </div>
         </div>
     </footer>
-    </html>
 </template>

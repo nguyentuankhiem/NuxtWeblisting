@@ -1,5 +1,4 @@
 <template>
-  <html>
     <body class="bg-white text-gray-600 work-sans leading-normal text-base tracking-normal">
 
     <!--Nav-->
@@ -183,7 +182,6 @@ Alternatively if you want to just have a single hero
     
 
 </body>
-  </html>
 </template>
 
 <script>
