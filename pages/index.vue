@@ -140,26 +140,28 @@
             <list-item :item-key="furniture" item-value="Có" />
           </div>
 
-          <h3 class="uppercase font-bold text-gray-800 text-xl pt-8 pb-4">
-           Tiện ích
-          </h3>
-          <div v-for="utility in project.utilities" :key="utility">
-            <list-item :item-key="utility" item-value="Có" />
+          <div v-if="project != null">
+                <h3 class="uppercase font-bold text-gray-800 text-xl pt-8 pb-4">
+                Tiện ích
+                </h3>
+                <div v-for="utility in project.utilities" :key="utility">
+                  <list-item :item-key="utility" item-value="Có" />
+                </div>
+
+                <h3 class="uppercase font-bold text-gray-800 text-xl pt-8 pb-4">
+                Đặc điểm bất động sản
+                </h3>
+                <list-item itemKey="Phòng" :itemValue="post.apartmentNumber"/>
+                <list-item item-key="Tên dự án" :item-value="project.projectName" />
+                <list-item item-key="Địa chỉ" :item-value="projectAddress" />
+                <list-item item-key="Pháp lý" :item-value="project.juridical" />
+
+                <h3 class="uppercase font-bold text-gray-800 text-xl pt-8 pb-4">
+                  Xem trên bản đồ
+                </h3>
+
+                <iframe class="w-full mb-8" height="300" :src="project.address.googleMapLocation" loading="lazy"></iframe>
           </div>
-
-          <h3 class="uppercase font-bold text-gray-800 text-xl pt-8 pb-4">
-           Đặc điểm bất động sản
-          </h3>
-          <list-item itemKey="Phòng" :itemValue="post.apartmentNumber"/>
-          <list-item item-key="Tên dự án" :item-value="project.projectName" />
-          <list-item item-key="Địa chỉ" :item-value="projectAddress" />
-          <list-item item-key="Pháp lý" :item-value="project.juridical" />
-
-          <h3 class="uppercase font-bold text-gray-800 text-xl pt-8 pb-4">
-            Xem trên bản đồ
-          </h3>
-
-           <iframe class="w-full mb-8" height="300" :src="project.address.googleMapLocation" loading="lazy"></iframe>
         </section>
         <div
           v-for="item in post.gallery"
@@ -190,7 +192,7 @@
 
 <script>
 import gql from "graphql-tag";
-import ListItem from './ListItem.vue';
+import ListItem from '../components/ListItem.vue';
 
 export default {
   components: { ListItem },
@@ -220,6 +222,7 @@ export default {
           }
         ) {
           id
+          projectId
           gallery
           acreage
           price
@@ -237,21 +240,33 @@ export default {
       }
     `,
 
-    projects: gql`
-      query {
-          projects {
-            projectName
-            juridical
-            address {
-              street
-              district
-              city
-              googleMapLocation
+    projects: { 
+      query() {
+          return gql`
+            query GetProject($projectId: String!) {
+                  projects(where: {id: {eq: $projectId}}) {
+                  projectName
+                  juridical
+                  address {
+                    street
+                    district
+                    city
+                    googleMapLocation
+                  }
+                  utilities
+              }
             }
-            utilities
+          `;
+      },
+
+      skip() { return this?.posts == null; },
+
+      variables() {
+        return {
+          projectId: this.post.projectId
         }
-      }
-    ` 
+      },
+    }
   },
   computed: {
     post() {
@@ -259,7 +274,7 @@ export default {
     },
 
     project() {
-      return this.projects[0];
+      return this.projects && this.projects[0];
     },
 
     projectAddress() {
