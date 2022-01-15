@@ -35,7 +35,7 @@
               class="uppercase tracking-wide no-underline hover:no-underline font-bold text-gray-800 text-xl"
               href="#"
             >
-              Store
+              {{ post.pageInfor.title }}
             </a>
 
             <div class="flex items-center" id="store-nav-content">
@@ -74,6 +74,93 @@
           </div>
         </nav>
 
+        <div class="block w-full overflow-x-auto mx-auto px-8">
+          <table class="items-center bg-transparent w-full border-collapse">
+            <thead>
+              <tr>
+                <th
+                  class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+                >
+                  Mức giá
+                </th>
+                <th
+                  class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+                >
+                  Diện tích
+                </th>
+                <th
+                  class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+                >
+                  Phòng ngủ - phòng tắm
+                </th>
+                <th
+                  class="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left"
+                >
+                  Hướng
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th
+                  class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left text-blueGray-700"
+                >
+                  {{ post.price }}
+                </th>
+                <td
+                  class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+                >
+                  {{ post.acreage }}
+                </td>
+                <td
+                  class="border-t-0 px-6 align-center border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+                >
+                  {{ post.roomStructure }}
+                </td>
+                <td
+                  class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
+                >
+                  {{ post.direction }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <section class="w-full px-8">
+          <h3 class="uppercase font-bold text-gray-800 text-xl pt-8" href="#">
+            Thông tin mô tả
+          </h3>
+          <div v-html="post.description" class="pt-4 pb-8"></div>
+
+          <h3 class="uppercase font-bold text-gray-800 text-xl pb-4">
+            Nội thất
+          </h3>
+          <div v-for="furniture in post.furnitures" :key="furniture">
+            <list-item :item-key="furniture" item-value="Có" />
+          </div>
+
+          <h3 class="uppercase font-bold text-gray-800 text-xl pt-8 pb-4">
+           Tiện ích
+          </h3>
+          <div v-for="utility in project.utilities" :key="utility">
+            <list-item :item-key="utility" item-value="Có" />
+          </div>
+
+          <h3 class="uppercase font-bold text-gray-800 text-xl pt-8 pb-4">
+           Đặc điểm bất động sản
+          </h3>
+          <list-item itemKey="Phòng" :itemValue="post.apartmentNumber"/>
+          <list-item item-key="Tên dự án" :item-value="project.projectName" />
+          <list-item item-key="Địa chỉ" :item-value="projectAddress" />
+          <list-item item-key="Pháp lý" :item-value="project.juridical" />
+
+          <h3 class="uppercase font-bold text-gray-800 text-xl pt-8 pb-4">
+            Xem trên bản đồ
+          </h3>
+
+           <iframe class="w-full mb-8" height="300" :src="project.address.googleMapLocation" loading="lazy"></iframe>
+        </section>
         <div
           v-for="item in post.gallery"
           :key="item"
@@ -103,8 +190,10 @@
 
 <script>
 import gql from "graphql-tag";
+import ListItem from './ListItem.vue';
 
 export default {
+  components: { ListItem },
   name: "IndexPage",
   data() {
     return {
@@ -132,20 +221,51 @@ export default {
         ) {
           id
           gallery
+          acreage
           price
+          roomStructure
+          direction
           description
           roomStructure
+          furnitures
+          apartmentNumber
+          floor
           pageInfor {
             title
           }
         }
       }
     `,
+
+    projects: gql`
+      query {
+          projects {
+            projectName
+            juridical
+            address {
+              street
+              district
+              city
+              googleMapLocation
+            }
+            utilities
+        }
+      }
+    ` 
   },
   computed: {
     post() {
       return this.posts[0];
     },
+
+    project() {
+      return this.projects[0];
+    },
+
+    projectAddress() {
+      let address = this.project.address;
+      return `${address.street}, ${address.district}, ${address.city}` 
+    }
   },
 };
 </script>
