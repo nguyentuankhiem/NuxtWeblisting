@@ -9,8 +9,19 @@ export default {
       { name: 'format-detection', content: 'telephone=no' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-    ]
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      { rel: 'stylesheet', href:'https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css'},
+      { rel: 'stylesheet', href:'https://fonts.googleapis.com/css?family=Work+Sans:200,400&display=swap'},
+      { rel: 'stylesheet', href:'https://cdnjs.cloudflare.com/ajax/libs/Glide.js/3.2.0/css/glide.theme.min.css'},
+      { rel: 'stylesheet', href:'https://cdnjs.cloudflare.com/ajax/libs/Glide.js/3.2.0/css/glide.core.min.css'}
+    ],
+    script:[
+      { src: 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js', body: true},
+      { src: 'https://cdn.jsdelivr.net/npm/@glidejs/glide', body: true}
+    ],
+    bodyAttrs:{ 
+      class: ['bg-white', 'text-gray-600', 'work-sans', 'leading-normal', 'text-base', 'tracking-normal']
+    }
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
