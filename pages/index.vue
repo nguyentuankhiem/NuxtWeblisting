@@ -142,14 +142,14 @@
 
           <div>
                 <h3 class="uppercase font-bold text-gray-800 text-xl pt-8 pb-4">
-                Tiện ích
+                  Tiện ích
                 </h3>
                 <div v-for="utility in post.project.utilities" :key="utility">
                   <list-item :item-key="utility" item-value="Có" />
                 </div>
 
                 <h3 class="uppercase font-bold text-gray-800 text-xl pt-8 pb-4">
-                Đặc điểm bất động sản
+                  Đặc điểm bất động sản
                 </h3>
                 <list-item itemKey="Phòng" :itemValue="post.apartmentNumber"/>
                 <list-item item-key="Tên dự án" :item-value="post.project.projectName" />
