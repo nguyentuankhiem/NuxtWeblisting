@@ -140,11 +140,11 @@
             <list-item :item-key="furniture" item-value="Có" />
           </div>
 
-          <div v-if="project != null">
+          <div>
                 <h3 class="uppercase font-bold text-gray-800 text-xl pt-8 pb-4">
                 Tiện ích
                 </h3>
-                <div v-for="utility in project.utilities" :key="utility">
+                <div v-for="utility in post.project.utilities" :key="utility">
                   <list-item :item-key="utility" item-value="Có" />
                 </div>
 
@@ -152,15 +152,15 @@
                 Đặc điểm bất động sản
                 </h3>
                 <list-item itemKey="Phòng" :itemValue="post.apartmentNumber"/>
-                <list-item item-key="Tên dự án" :item-value="project.projectName" />
-                <list-item item-key="Địa chỉ" :item-value="projectAddress" />
-                <list-item item-key="Pháp lý" :item-value="project.juridical" />
+                <list-item item-key="Tên dự án" :item-value="post.project.projectName" />
+                <list-item item-key="Địa chỉ" :item-value="(`${post.project.address.street} ${post.project.address.district} ${post.project.address.city}`)" />
+                <list-item item-key="Pháp lý" :item-value="post.project.juridical" />
 
                 <h3 class="uppercase font-bold text-gray-800 text-xl pt-8 pb-4">
                   Xem trên bản đồ
                 </h3>
 
-                <iframe class="w-full mb-8" height="300" :src="project.address.googleMapLocation" loading="lazy"></iframe>
+                <iframe class="w-full mb-8" height="300" :src="post.project.address.googleMapLocation" loading="lazy"></iframe>
           </div>
         </section>
         <div
@@ -210,9 +210,9 @@ export default {
     }).mount();
   },
   apollo: {
-    posts: gql`
+    post: gql`
       query GetPost {
-        posts(
+        post(
           where: {
             pageInfor: {
               slug: {
@@ -222,7 +222,6 @@ export default {
           }
         ) {
           id
-          projectId
           gallery
           acreage
           price
@@ -235,52 +234,21 @@ export default {
           floor
           pageInfor {
             title
+          },
+          project {
+            projectName
+            address {
+              street,
+              district,
+              city,
+              googleMapLocation
+            }
+            juridical
+            utilities
           }
         }
       }
     `,
-
-    projects: { 
-      query() {
-          return gql`
-            query GetProject($projectId: String!) {
-                  projects(where: {id: {eq: $projectId}}) {
-                  projectName
-                  juridical
-                  address {
-                    street
-                    district
-                    city
-                    googleMapLocation
-                  }
-                  utilities
-              }
-            }
-          `;
-      },
-
-      skip() { return this?.posts == null; },
-
-      variables() {
-        return {
-          projectId: this.post.projectId
-        }
-      },
-    }
-  },
-  computed: {
-    post() {
-      return this.posts[0];
-    },
-
-    project() {
-      return this.projects && this.projects[0];
-    },
-
-    projectAddress() {
-      let address = this.project.address;
-      return `${address.street}, ${address.district}, ${address.city}` 
-    }
   },
 };
 </script>
